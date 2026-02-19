@@ -352,6 +352,7 @@ function createCard(item) {
 
 // Helper function to parse duration from string
 function parseDuration(durationStr) {
+    if (!durationStr) return 0;
     const match = durationStr.match(/(\d+)/); // Extract number
     return match ? parseInt(match[1]) : 0;
 }
@@ -387,11 +388,11 @@ function filterItem(item) {
     const roleTitle = (item.role || item.title || '').toLowerCase();
     const skills = item.skills || item.tags || [];
     const company = (item.company || '').toLowerCase();
-    const searchTerm = currentSearch.toLowerCase();
-    const matchesSearch = currentSearch === '' || 
+    const searchTerm = (currentSearch || '').toLowerCase();
+    const matchesSearch = !currentSearch || currentSearch === '' || 
                          roleTitle.includes(searchTerm) ||
                          company.includes(searchTerm) ||
-                         skills.some(skill => skill.toLowerCase().includes(searchTerm));
+                         skills.some(skill => (skill || '').toLowerCase().includes(searchTerm));
     
     // Location filter
     const matchesLocation = currentLocation === 'all' || 
@@ -417,35 +418,37 @@ function renderCards() {
     const filteredInternships = internships.filter(filterItem);
     const filteredProjects = projects.filter(filterItem);
     
-    const totalResults = filteredInternships.length + filteredProjects.length;
-    
     // Update results count
     updateResultsCount(filteredInternships.length, filteredProjects.length);
 
     // Render internships
-    if (filteredInternships.length > 0) {
-        internshipsGrid.innerHTML = filteredInternships.map(createCard).join('');
-    } else {
-        internshipsGrid.innerHTML = `
-            <div class="no-results">
-                <div class="no-results-icon">🔍</div>
-                <h3>No internships found</h3>
-                <p>Try adjusting your filters or search terms</p>
-            </div>
-        `;
+    if (internshipsGrid) {
+        if (filteredInternships.length > 0) {
+            internshipsGrid.innerHTML = filteredInternships.map(createCard).join('');
+        } else {
+            internshipsGrid.innerHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">🔍</div>
+                    <h3>No internships found</h3>
+                    <p>Try adjusting your filters or search terms</p>
+                </div>
+            `;
+        }
     }
     
     // Render projects
-    if (filteredProjects.length > 0) {
-        projectsGrid.innerHTML = filteredProjects.map(createCard).join('');
-    } else {
-        projectsGrid.innerHTML = `
-            <div class="no-results">
-                <div class="no-results-icon">📁</div>
-                <h3>No projects found</h3>
-                <p>Try adjusting your filters or search terms</p>
-            </div>
-        `;
+    if (projectsGrid) {
+        if (filteredProjects.length > 0) {
+            projectsGrid.innerHTML = filteredProjects.map(createCard).join('');
+        } else {
+            projectsGrid.innerHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">📁</div>
+                    <h3>No projects found</h3>
+                    <p>Try adjusting your filters or search terms</p>
+                </div>
+            `;
+        }
     }
 
     // Add staggered animation to cards
@@ -456,6 +459,8 @@ function renderCards() {
 
 // Update results count display
 function updateResultsCount(internshipCount, projectCount) {
+    if (!resultsCount) return;
+    
     const total = internshipCount + projectCount;
     let text = '';
     
