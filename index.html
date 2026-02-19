@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpportunityHub - Find Internships & Projects</title>
     <script>
         // Redirect to login or dashboard based on auth state
-        (function() {
+        (function () {
             const auth = localStorage.getItem('opportunityhub-auth');
             if (auth) {
                 window.location.href = 'dashboard.html';
@@ -16,257 +17,266 @@
         })();
     </script>
 </head>
+
 <body>
     <p>Redirecting...</p>
 </body>
+
 </html>
 <!--
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Find Your Next <span class="highlight">Internship</span> or <span class="highlight">Project</span></h1>
-                <p class="hero-subtitle">Discover opportunities that match your skills and aspirations. Connect with top companies and kickstart your career journey.</p>
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search internships, projects, skills...">
-                    <select id="categoryFilter">
-                        <option value="all">All Categories</option>
-                        <option value="internship">Internships</option>
-                        <option value="project">Projects</option>
-                    </select>
-                    <button class="btn btn-primary search-btn">Search</button>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number">500+</span>
-                        <span class="stat-label">Opportunities</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">200+</span>
-                        <span class="stat-label">Companies</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">10K+</span>
-                        <span class="stat-label">Students</span>
-                    </div>
-                </div>
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Find Your Next <span class="highlight">Internship</span> or <span
+                    class="highlight">Project</span></h1>
+            <p class="hero-subtitle">Discover opportunities that match your skills and aspirations. Connect with top
+                companies and kickstart your career journey.</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search internships, projects, skills...">
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="internship">Internships</option>
+                    <option value="project">Projects</option>
+                </select>
+                <button class="btn btn-primary search-btn">Search</button>
             </div>
-        </div>
-    </section>
-
-    <!-- Filters Section -->
-    <section class="filters-section">
-        <div class="container">
-            <!-- Compact Filter Bar -->
-            <div class="filter-bar-compact">
-                <div class="search-input-compact">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="liveSearchInput" placeholder="Search roles, skills..." autocomplete="off">
-                    <button class="clear-search" id="clearSearch" title="Clear">✕</button>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Opportunities</span>
                 </div>
-                
-                <button class="btn btn-filter" id="toggleFilters">
-                    <span class="filter-icon">⚙️</span>
-                    <span>Filters</span>
-                    <span class="filter-count" id="activeFilterCount"></span>
-                </button>
-                
-                <div class="results-info-compact">
-                    <span id="resultsCount">18 results</span>
+                <div class="stat">
+                    <span class="stat-number">200+</span>
+                    <span class="stat-label">Companies</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">10K+</span>
+                    <span class="stat-label">Students</span>
                 </div>
             </div>
-            
-            <!-- Collapsible Filter Panel -->
-            <div class="filter-panel" id="filterPanel">
-                <div class="filter-panel-content">
-                    <!-- Dropdown Filters -->
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label for="locationFilter">📍 Location</label>
-                            <select id="locationFilter">
-                                <option value="all">All Locations</option>
-                                <option value="remote">Remote</option>
-                                <option value="onsite">Onsite</option>
-                                <option value="hybrid">Hybrid</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label for="stipendFilter">💰 Stipend</label>
-                            <select id="stipendFilter">
-                                <option value="all">All</option>
-                                <option value="paid">Paid</option>
-                                <option value="unpaid">Unpaid</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label for="durationFilter">⏱️ Duration</label>
-                            <select id="durationFilter">
-                                <option value="all">All Durations</option>
-                                <option value="1-2">1-2 Months</option>
-                                <option value="3-4">3-4 Months</option>
-                                <option value="5-6">5-6 Months</option>
-                            </select>
-                        </div>
-                        
-                        <button class="btn btn-secondary reset-filters" id="resetFilters">Reset</button>
-                    </div>
-                    
-                    <!-- Category Tags -->
-                    <div class="filter-tags">
-                        <span class="filter-label">Category:</span>
-                        <button class="filter-tag active" data-filter="all">All</button>
-                        <button class="filter-tag" data-filter="tech">Tech</button>
-                        <button class="filter-tag" data-filter="design">Design</button>
-                        <button class="filter-tag" data-filter="marketing">Marketing</button>
-                        <button class="filter-tag" data-filter="data">Data Science</button>
-                        <button class="filter-tag" data-filter="business">Business</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Internships Section -->
-    <section id="internships" class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Featured Internships</h2>
-                <a href="#" class="view-all">View All →</a>
-            </div>
-            <div class="cards-grid" id="internshipsGrid">
-                <!-- Cards will be dynamically inserted -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="section section-alt">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Open Projects</h2>
-                <a href="#" class="view-all">View All →</a>
-            </div>
-            <div class="cards-grid" id="projectsGrid">
-                <!-- Cards will be dynamically inserted -->
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="section about-section">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2 class="section-title">Why Choose OpportunityHub?</h2>
-                    <p>We connect talented students with the best internships and project opportunities from leading companies worldwide.</p>
-                    <div class="features">
-                        <div class="feature">
-                            <span class="feature-icon">✓</span>
-                            <span>Curated opportunities from verified companies</span>
-                        </div>
-                        <div class="feature">
-                            <span class="feature-icon">✓</span>
-                            <span>Easy application process</span>
-                        </div>
-                        <div class="feature">
-                            <span class="feature-icon">✓</span>
-                            <span>Track your applications in one place</span>
-                        </div>
-                        <div class="feature">
-                            <span class="feature-icon">✓</span>
-                            <span>Get matched based on your skills</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary">Get Started</button>
-                </div>
-                <div class="about-image">
-                    <div class="image-placeholder">
-                        <span>🎯</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="section">
-        <div class="container">
-            <div class="contact-content">
-                <h2 class="section-title">Get In Touch</h2>
-                <p class="contact-subtitle">Have questions? We'd love to hear from you.</p>
-                <form class="contact-form" id="contactForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <input type="text" placeholder="Your Name" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" placeholder="Your Email" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <textarea placeholder="Your Message" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <a href="#" class="logo footer-logo">
-                        <span class="logo-icon">🚀</span>
-                        <span class="logo-text">OpportunityHub</span>
-                    </a>
-                    <p class="footer-desc">Connecting students with opportunities that shape their future.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#internships">Internships</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Categories</h4>
-                    <ul>
-                        <li><a href="#">Technology</a></li>
-                        <li><a href="#">Design</a></li>
-                        <li><a href="#">Marketing</a></li>
-                        <li><a href="#">Data Science</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Follow Us</h4>
-                    <div class="social-links">
-                        <a href="#" class="social-link">LinkedIn</a>
-                        <a href="#" class="social-link">Twitter</a>
-                        <a href="#" class="social-link">Instagram</a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 OpportunityHub. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Modal -->
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <button class="modal-close">&times;</button>
-            <div id="modalBody"></div>
         </div>
     </div>
+</section>
 
-    <script src="script.js"></script>
+<!-- Filters Section -->
+<section class="filters-section">
+    <div class="container">
+        <!-- Compact Filter Bar -->
+        <div class="filter-bar-compact">
+            <div class="search-input-compact">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="liveSearchInput" placeholder="Search roles, skills..." autocomplete="off">
+                <button class="clear-search" id="clearSearch" title="Clear">✕</button>
+            </div>
+
+            <button class="btn btn-filter" id="toggleFilters">
+                <span class="filter-icon">⚙️</span>
+                <span>Filters</span>
+                <span class="filter-count" id="activeFilterCount"></span>
+            </button>
+
+            <div class="results-info-compact">
+                <span id="resultsCount">18 results</span>
+            </div>
+        </div>
+
+        <!-- Collapsible Filter Panel -->
+        <div class="filter-panel" id="filterPanel">
+            <div class="filter-panel-content">
+                <!-- Dropdown Filters -->
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="locationFilter">📍 Location</label>
+                        <select id="locationFilter">
+                            <option value="all">All Locations</option>
+                            <option value="remote">Remote</option>
+                            <option value="onsite">Onsite</option>
+                            <option value="hybrid">Hybrid</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="stipendFilter">💰 Stipend</label>
+                        <select id="stipendFilter">
+                            <option value="all">All</option>
+                            <option value="paid">Paid</option>
+                            <option value="unpaid">Unpaid</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="durationFilter">⏱️ Duration</label>
+                        <select id="durationFilter">
+                            <option value="all">All Durations</option>
+                            <option value="1-2">1-2 Months</option>
+                            <option value="3-4">3-4 Months</option>
+                            <option value="5-6">5-6 Months</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-secondary reset-filters" id="resetFilters">Reset</button>
+                </div>
+
+                <!-- Category Tags -->
+                <div class="filter-tags">
+                    <span class="filter-label">Category:</span>
+                    <button class="filter-tag active" data-filter="all">All</button>
+                    <button class="filter-tag" data-filter="tech">Tech</button>
+                    <button class="filter-tag" data-filter="design">Design</button>
+                    <button class="filter-tag" data-filter="marketing">Marketing</button>
+                    <button class="filter-tag" data-filter="data">Data Science</button>
+                    <button class="filter-tag" data-filter="business">Business</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Internships Section -->
+<section id="internships" class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Featured Internships</h2>
+            <a href="#" class="view-all">View All →</a>
+        </div>
+        <div class="cards-grid" id="internshipsGrid">
+            <!-- Cards will be dynamically inserted -->
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Open Projects</h2>
+            <a href="#" class="view-all">View All →</a>
+        </div>
+        <div class="cards-grid" id="projectsGrid">
+            <!-- Cards will be dynamically inserted -->
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="section about-section">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2 class="section-title">Why Choose OpportunityHub?</h2>
+                <p>We connect talented students with the best internships and project opportunities from leading
+                    companies worldwide.</p>
+                <div class="features">
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        <span>Curated opportunities from verified companies</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        <span>Easy application process</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        <span>Track your applications in one place</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        <span>Get matched based on your skills</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary">Get Started</button>
+            </div>
+            <div class="about-image">
+                <div class="image-placeholder">
+                    <span>🎯</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="section">
+    <div class="container">
+        <div class="contact-content">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="contact-subtitle">Have questions? We'd love to hear from you.</p>
+            <form class="contact-form" id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea placeholder="Your Message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="#" class="logo footer-logo">
+                    <span class="logo-icon">🚀</span>
+                    <span class="logo-text">OpportunityHub</span>
+                </a>
+                <p class="footer-desc">Connecting students with opportunities that shape their future.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#internships">Internships</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Categories</h4>
+                <ul>
+                    <li><a href="#">Technology</a></li>
+                    <li><a href="#">Design</a></li>
+                    <li><a href="#">Marketing</a></li>
+                    <li><a href="#">Data Science</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#" class="social-link">LinkedIn</a>
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 OpportunityHub. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+    (function () { if (!window.chatbase || window.chatbase("getState") !== "initialized") { window.chatbase = (...arguments) => { if (!window.chatbase.q) { window.chatbase.q = [] } window.chatbase.q.push(arguments) }; window.chatbase = new Proxy(window.chatbase, { get(target, prop) { if (prop === "q") { return target.q } return (...args) => target(prop, ...args) } }) } const onLoad = function () { const script = document.createElement("script"); script.src = "https://www.chatbase.co/embed.min.js"; script.id = "ldgOnBCkofzbJWGTmZzB-"; script.domain = "www.chatbase.co"; document.body.appendChild(script) }; if (document.readyState === "complete") { onLoad() } else { window.addEventListener("load", onLoad) } })();
+</script>
 </body>
+
 </html>
