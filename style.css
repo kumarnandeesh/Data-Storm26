@@ -892,14 +892,14 @@ img {
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 12px;
 }
 
 /* ===== Card ===== */
 .card {
     background: var(--bg-card);
-    border-radius: 10px;
-    padding: 16px;
+    border-radius: 8px;
+    padding: 12px;
     box-shadow: var(--shadow);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
@@ -907,6 +907,7 @@ img {
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-width: 0;
 }
 
 .card:hover {
@@ -917,19 +918,19 @@ img {
 .card-header {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 8px;
+    margin-bottom: 8px;
 }
 
 .card-logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
     background: linear-gradient(135deg, var(--primary-light) 0%, #e0e7ff 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
     flex-shrink: 0;
 }
 
@@ -939,7 +940,7 @@ img {
 }
 
 .card-title {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 2px;
@@ -952,7 +953,7 @@ img {
 .card-company {
     color: var(--primary);
     font-weight: 500;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
 }
 
 .card-badge {
@@ -976,8 +977,8 @@ img {
 
 .card-description {
     color: var(--text-muted);
-    font-size: 0.8rem;
-    margin-bottom: 10px;
+    font-size: 0.7rem;
+    margin-bottom: 8px;
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -986,28 +987,28 @@ img {
 }
 
 .card-skills {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .skills-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 600;
     color: var(--text-muted);
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     display: block;
 }
 
 .card-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 3px;
 }
 
 .tag {
-    padding: 2px 6px;
+    padding: 2px 5px;
     background: var(--bg-secondary);
-    border-radius: 4px;
-    font-size: 0.7rem;
+    border-radius: 3px;
+    font-size: 0.65rem;
     color: var(--text-secondary);
 }
 
@@ -1032,8 +1033,8 @@ img {
 .card-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    padding: 10px 0;
+    gap: 4px;
+    padding: 8px 0;
     border-top: 1px solid var(--border-color);
     margin-top: auto;
 }
@@ -1041,8 +1042,8 @@ img {
 .detail-item {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.75rem;
+    gap: 3px;
+    font-size: 0.65rem;
 }
 
 .detail-item.stipend-item {
@@ -1097,48 +1098,196 @@ img {
 }
 
 .card-actions {
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 .card-actions .btn {
     width: 100%;
-    padding: 8px 12px;
-    font-size: 0.8rem;
+    padding: 6px 10px;
+    font-size: 0.75rem;
 }
 
 /* ===== Responsive Card Grid ===== */
-@media (max-width: 1400px) {
+/* Large screens - 4 cards per row */
+@media (min-width: 1200px) {
     .cards-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
     }
 }
 
-@media (max-width: 1024px) {
+/* Medium-large screens - 4 cards per row */
+@media (max-width: 1199px) and (min-width: 992px) {
     .cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .card {
-        padding: 18px;
-    }
-    
-    .card-title {
-        font-size: 1rem;
-    }
-    
-    .card-description {
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 640px) {
-    .cards-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(4, 1fr);
         gap: 12px;
     }
     
     .card {
-        padding: 16px;
+        padding: 10px;
+    }
+    
+    .card-logo {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
+    
+    .card-title {
+        font-size: 0.8rem;
+    }
+    
+    .card-description {
+        font-size: 0.65rem;
+        -webkit-line-clamp: 2;
+    }
+}
+
+/* Tablets - 3 cards per row */
+@media (max-width: 991px) and (min-width: 768px) {
+    .cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    
+    .card {
+        padding: 12px;
+    }
+    
+    .card-title {
+        font-size: 0.85rem;
+    }
+    
+    .card-description {
+        font-size: 0.7rem;
+    }
+}
+
+/* Small tablets / Large phones - 2 cards per row */
+@media (max-width: 767px) and (min-width: 480px) {
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .card {
+        padding: 10px;
+    }
+    
+    .card-logo {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
+    
+    .card-title {
+        font-size: 0.8rem;
+    }
+    
+    .card-company {
+        font-size: 0.7rem;
+    }
+    
+    .card-description {
+        font-size: 0.65rem;
+        -webkit-line-clamp: 2;
+    }
+    
+    .tag {
+        font-size: 0.6rem;
+        padding: 1px 4px;
+    }
+    
+    .detail-item {
+        font-size: 0.6rem;
+    }
+}
+
+/* Mobile phones - 2 cards per row (compact) */
+@media (max-width: 479px) {
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .card {
+        padding: 8px;
+    }
+    
+    .card-header {
+        gap: 6px;
+        margin-bottom: 6px;
+    }
+    
+    .card-logo {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+        border-radius: 4px;
+    }
+    
+    .card-title {
+        font-size: 0.7rem;
+    }
+    
+    .card-company {
+        font-size: 0.6rem;
+    }
+    
+    .card-badge {
+        padding: 1px 5px;
+        font-size: 0.55rem;
+    }
+    
+    .card-description {
+        font-size: 0.6rem;
+        margin-bottom: 6px;
+        -webkit-line-clamp: 2;
+    }
+    
+    .card-skills {
+        margin-bottom: 6px;
+    }
+    
+    .skills-label {
+        font-size: 0.55rem;
+    }
+    
+    .card-tags {
+        gap: 2px;
+    }
+    
+    .tag {
+        font-size: 0.55rem;
+        padding: 1px 3px;
+    }
+    
+    .card-details {
+        padding: 6px 0;
+        gap: 3px;
+    }
+    
+    .detail-item {
+        font-size: 0.55rem;
+        gap: 2px;
+    }
+    
+    .detail-icon {
+        font-size: 0.65rem;
+    }
+    
+    .location-badge {
+        font-size: 0.5rem;
+        padding: 1px 4px;
+    }
+    
+    .card-actions {
+        margin-top: 6px;
+    }
+    
+    .card-actions .btn {
+        padding: 5px 8px;
+        font-size: 0.65rem;
     }
 }
 
@@ -1542,10 +1691,6 @@ img {
 
     .welcome-content h1 {
         font-size: 1.4rem;
-    }
-}
-    .cards-grid {
-        grid-template-columns: 1fr;
     }
 
     .section {

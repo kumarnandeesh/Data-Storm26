@@ -6,9 +6,9 @@ const USERS_KEY = 'opportunityhub-users';
 const defaultUsers = [
     {
         id: 1,
-        email: 'demo@example.com',
-        password: 'demo1234',
-        firstName: 'Demo',
+        email: 'kumar@example.com',
+        password: 'kumar123',
+        firstName: 'Kumar',
         lastName: 'User'
     },
     {
