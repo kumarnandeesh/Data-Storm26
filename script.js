@@ -172,74 +172,86 @@ const internships = [
 
 const projects = [
     {
-        id: 7,
-        title: "E-commerce Platform Redesign",
+        id: 101,
+        role: "E-commerce Platform Redesign",
         company: "ShopEasy",
         logo: "🛒",
         description: "Complete UI overhaul for a popular e-commerce platform. Looking for passionate designers and developers.",
-        tags: ["React", "Node.js", "Figma"],
+        skills: ["React", "Node.js", "Figma", "CSS"],
         location: "Remote",
+        locationType: "remote",
         duration: "2 months",
+        stipend: "₹35,000 (fixed)",
         category: "tech",
         type: "project"
     },
     {
-        id: 8,
-        title: "Mobile App for Healthcare",
+        id: 102,
+        role: "Mobile App for Healthcare",
         company: "HealthFirst",
         logo: "🏥",
         description: "Build a patient management app using React Native. Opportunity to make a real impact in healthcare.",
-        tags: ["React Native", "Firebase", "UX"],
+        skills: ["React Native", "Firebase", "UX", "TypeScript"],
         location: "Boston, MA",
+        locationType: "hybrid",
         duration: "3 months",
+        stipend: "₹50,000 (fixed)",
         category: "tech",
         type: "project"
     },
     {
-        id: 9,
-        title: "Brand Identity Design",
+        id: 103,
+        role: "Brand Identity Design",
         company: "StartupXYZ",
         logo: "✨",
         description: "Create complete brand identity including logo, color palette, and design system for an emerging startup.",
-        tags: ["Branding", "Illustrator", "Design"],
+        skills: ["Branding", "Illustrator", "Photoshop", "Design"],
         location: "Remote",
+        locationType: "remote",
         duration: "1 month",
+        stipend: "₹20,000 (fixed)",
         category: "design",
         type: "project"
     },
     {
-        id: 10,
-        title: "Market Research Study",
+        id: 104,
+        role: "Market Research Study",
         company: "InsightLab",
         logo: "🔍",
         description: "Conduct comprehensive market research for a new product launch. Analyze consumer behavior and trends.",
-        tags: ["Research", "Surveys", "Analysis"],
+        skills: ["Research", "Surveys", "Data Analysis", "Excel"],
         location: "Remote",
+        locationType: "remote",
         duration: "6 weeks",
+        stipend: "₹25,000 (fixed)",
         category: "business",
         type: "project"
     },
     {
-        id: 11,
-        title: "AI Chatbot Development",
+        id: 105,
+        role: "AI Chatbot Development",
         company: "BotWorks",
         logo: "🤖",
         description: "Develop an intelligent customer support chatbot using NLP and machine learning techniques.",
-        tags: ["Python", "NLP", "TensorFlow"],
+        skills: ["Python", "NLP", "TensorFlow", "APIs"],
         location: "Seattle, WA",
+        locationType: "onsite",
         duration: "2 months",
+        stipend: "₹45,000 (fixed)",
         category: "data",
         type: "project"
     },
     {
-        id: 12,
-        title: "Social Media Campaign",
+        id: 106,
+        role: "Social Media Campaign",
         company: "ViralMedia",
         logo: "📱",
         description: "Plan and execute a viral marketing campaign for a new product launch across multiple platforms.",
-        tags: ["Social Media", "Content", "Strategy"],
+        skills: ["Social Media", "Content", "Strategy", "Analytics"],
         location: "Los Angeles, CA",
+        locationType: "hybrid",
         duration: "1 month",
+        stipend: "₹18,000 (fixed)",
         category: "marketing",
         type: "project"
     }
@@ -258,10 +270,25 @@ const modalBody = document.getElementById('modalBody');
 const modalClose = document.querySelector('.modal-close');
 const contactForm = document.getElementById('contactForm');
 
+// New Filter Elements
+const liveSearchInput = document.getElementById('liveSearchInput');
+const clearSearchBtn = document.getElementById('clearSearch');
+const locationFilter = document.getElementById('locationFilter');
+const stipendFilter = document.getElementById('stipendFilter');
+const durationFilter = document.getElementById('durationFilter');
+const resetFiltersBtn = document.getElementById('resetFilters');
+const resultsCount = document.getElementById('resultsCount');
+const toggleFiltersBtn = document.getElementById('toggleFilters');
+const filterPanel = document.getElementById('filterPanel');
+const activeFilterCount = document.getElementById('activeFilterCount');
+
 // ===== Current Filter State =====
-let currentFilter = 'all';
-let currentSearch = '';
-let currentCategory = 'all';
+let currentFilter = 'all';        // Category filter (tech, design, etc.)
+let currentSearch = '';           // Live search text
+let currentCategory = 'all';      // Type filter (internship/project)
+let currentLocation = 'all';      // Location type filter
+let currentStipend = 'all';       // Paid/Unpaid filter
+let currentDuration = 'all';      // Duration filter
 
 // ===== Render Cards =====
 function createCard(item) {
@@ -280,6 +307,10 @@ function createCard(item) {
     // Use skills or tags (backward compatibility)
     const skills = item.skills || item.tags || [];
     
+    // Determine badge type
+    const badgeClass = item.type === 'internship' ? 'badge-internship' : 'badge-project';
+    const badgeText = item.type === 'internship' ? 'Internship' : 'Project';
+    
     return `
         <div class="card" data-id="${item.id}" data-category="${item.category}" data-type="${item.type}">
             <div class="card-header">
@@ -288,7 +319,7 @@ function createCard(item) {
                     <h3 class="card-title">${roleTitle}</h3>
                     <span class="card-company">${item.company}</span>
                 </div>
-                <span class="card-badge badge-internship">Internship</span>
+                <span class="card-badge ${badgeClass}">${badgeText}</span>
             </div>
             <p class="card-description">${item.description}</p>
             <div class="card-skills">
@@ -319,65 +350,307 @@ function createCard(item) {
     `;
 }
 
-function renderCards() {
-    // Filter internships
-    const filteredInternships = internships.filter(item => {
-        const matchesFilter = currentFilter === 'all' || item.category === currentFilter;
-        const matchesCategory = currentCategory === 'all' || item.type === currentCategory;
-        const matchesSearch = item.title.toLowerCase().includes(currentSearch) ||
-                            item.company.toLowerCase().includes(currentSearch) ||
-                            item.tags.some(tag => tag.toLowerCase().includes(currentSearch));
-        return matchesFilter && matchesCategory && matchesSearch;
-    });
+// Helper function to parse duration from string
+function parseDuration(durationStr) {
+    const match = durationStr.match(/(\d+)/); // Extract number
+    return match ? parseInt(match[1]) : 0;
+}
 
-    // Filter projects
-    const filteredProjects = projects.filter(item => {
-        const matchesFilter = currentFilter === 'all' || item.category === currentFilter;
-        const matchesCategory = currentCategory === 'all' || item.type === currentCategory;
-        const matchesSearch = item.title.toLowerCase().includes(currentSearch) ||
-                            item.company.toLowerCase().includes(currentSearch) ||
-                            item.tags.some(tag => tag.toLowerCase().includes(currentSearch));
-        return matchesFilter && matchesCategory && matchesSearch;
-    });
+// Helper function to check if item matches duration filter
+function matchesDuration(item, filter) {
+    if (filter === 'all') return true;
+    const months = parseDuration(item.duration);
+    switch (filter) {
+        case '1-2': return months >= 1 && months <= 2;
+        case '3-4': return months >= 3 && months <= 4;
+        case '5-6': return months >= 5 && months <= 6;
+        default: return true;
+    }
+}
 
-    // Render
-    internshipsGrid.innerHTML = filteredInternships.length > 0 
-        ? filteredInternships.map(createCard).join('') 
-        : '<p class="no-results">No internships found matching your criteria.</p>';
+// Helper function to check if item is paid
+function isPaid(item) {
+    if (!item.stipend) return false;
+    const stipendLower = item.stipend.toLowerCase();
+    return !stipendLower.includes('unpaid') && !stipendLower.includes('0');
+}
+
+// Main filter function for any item
+function filterItem(item) {
+    // Category filter (tech, design, marketing, etc.)
+    const matchesCategory = currentFilter === 'all' || item.category === currentFilter;
     
-    projectsGrid.innerHTML = filteredProjects.length > 0 
-        ? filteredProjects.map(createCard).join('') 
-        : '<p class="no-results">No projects found matching your criteria.</p>';
+    // Type filter (internship/project)
+    const matchesType = currentCategory === 'all' || item.type === currentCategory;
+    
+    // Search filter (role, skills, company)
+    const roleTitle = (item.role || item.title || '').toLowerCase();
+    const skills = item.skills || item.tags || [];
+    const company = (item.company || '').toLowerCase();
+    const searchTerm = currentSearch.toLowerCase();
+    const matchesSearch = currentSearch === '' || 
+                         roleTitle.includes(searchTerm) ||
+                         company.includes(searchTerm) ||
+                         skills.some(skill => skill.toLowerCase().includes(searchTerm));
+    
+    // Location filter
+    const matchesLocation = currentLocation === 'all' || 
+                           (item.locationType && item.locationType === currentLocation);
+    
+    // Stipend filter (paid/unpaid)
+    let matchesStipend = true;
+    if (currentStipend === 'paid') {
+        matchesStipend = isPaid(item);
+    } else if (currentStipend === 'unpaid') {
+        matchesStipend = !isPaid(item);
+    }
+    
+    // Duration filter
+    const matchesDur = matchesDuration(item, currentDuration);
+    
+    return matchesCategory && matchesType && matchesSearch && 
+           matchesLocation && matchesStipend && matchesDur;
+}
 
-    // Add animation to cards
+function renderCards() {
+    // Filter internships and projects
+    const filteredInternships = internships.filter(filterItem);
+    const filteredProjects = projects.filter(filterItem);
+    
+    const totalResults = filteredInternships.length + filteredProjects.length;
+    
+    // Update results count
+    updateResultsCount(filteredInternships.length, filteredProjects.length);
+
+    // Render internships
+    if (filteredInternships.length > 0) {
+        internshipsGrid.innerHTML = filteredInternships.map(createCard).join('');
+    } else {
+        internshipsGrid.innerHTML = `
+            <div class="no-results">
+                <div class="no-results-icon">🔍</div>
+                <h3>No internships found</h3>
+                <p>Try adjusting your filters or search terms</p>
+            </div>
+        `;
+    }
+    
+    // Render projects
+    if (filteredProjects.length > 0) {
+        projectsGrid.innerHTML = filteredProjects.map(createCard).join('');
+    } else {
+        projectsGrid.innerHTML = `
+            <div class="no-results">
+                <div class="no-results-icon">📁</div>
+                <h3>No projects found</h3>
+                <p>Try adjusting your filters or search terms</p>
+            </div>
+        `;
+    }
+
+    // Add staggered animation to cards
     document.querySelectorAll('.card').forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
+        card.style.animationDelay = `${index * 0.05}s`;
     });
+}
+
+// Update results count display
+function updateResultsCount(internshipCount, projectCount) {
+    const total = internshipCount + projectCount;
+    let text = '';
+    
+    if (currentSearch || currentLocation !== 'all' || currentStipend !== 'all' || 
+        currentDuration !== 'all' || currentFilter !== 'all') {
+        text = `Found <span class="count">${total}</span> result${total !== 1 ? 's' : ''}`;
+        if (internshipCount > 0 && projectCount > 0) {
+            text += ` (${internshipCount} internship${internshipCount !== 1 ? 's' : ''}, ${projectCount} project${projectCount !== 1 ? 's' : ''})`;
+        }
+    } else {
+        text = `Showing all <span class="count">${total}</span> opportunities`;
+    }
+    
+    resultsCount.innerHTML = text;
 }
 
 // ===== Event Listeners =====
 
-// Filter tags
+// Category Filter Tags
 filterTags.forEach(tag => {
     tag.addEventListener('click', () => {
         filterTags.forEach(t => t.classList.remove('active'));
         tag.classList.add('active');
         currentFilter = tag.dataset.filter;
+        updateActiveFilterCount();
         renderCards();
     });
 });
 
-// Search
-searchInput.addEventListener('input', (e) => {
-    currentSearch = e.target.value.toLowerCase();
-    renderCards();
-});
+// Hero Search (optional - syncs with live search)
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        currentSearch = e.target.value.toLowerCase();
+        if (liveSearchInput) liveSearchInput.value = e.target.value;
+        toggleClearButton();
+        renderCards();
+    });
+}
 
-// Category filter
-categoryFilter.addEventListener('change', (e) => {
-    currentCategory = e.target.value;
-    renderCards();
-});
+// Category filter dropdown (in hero)
+if (categoryFilter) {
+    categoryFilter.addEventListener('change', (e) => {
+        currentCategory = e.target.value;
+        renderCards();
+    });
+}
+
+// ===== Live Search Filter =====
+if (liveSearchInput) {
+    // Debounce function for performance
+    let searchTimeout;
+    
+    liveSearchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const value = e.target.value;
+        
+        // Show/hide clear button
+        toggleClearButton();
+        
+        // Debounce search for better performance
+        searchTimeout = setTimeout(() => {
+            currentSearch = value.toLowerCase();
+            // Sync with hero search if exists
+            if (searchInput) searchInput.value = value;
+            renderCards();
+        }, 150);
+    });
+    
+    // Handle Enter key
+    liveSearchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            clearTimeout(searchTimeout);
+            currentSearch = liveSearchInput.value.toLowerCase();
+            renderCards();
+        }
+    });
+}
+
+// Clear search button
+if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', () => {
+        liveSearchInput.value = '';
+        if (searchInput) searchInput.value = '';
+        currentSearch = '';
+        toggleClearButton();
+        liveSearchInput.focus();
+        renderCards();
+    });
+}
+
+// Toggle clear button visibility
+function toggleClearButton() {
+    if (clearSearchBtn && liveSearchInput) {
+        if (liveSearchInput.value.length > 0) {
+            clearSearchBtn.classList.add('visible');
+        } else {
+            clearSearchBtn.classList.remove('visible');
+        }
+    }
+}
+
+// ===== Filter Panel Toggle =====
+if (toggleFiltersBtn && filterPanel) {
+    toggleFiltersBtn.addEventListener('click', () => {
+        filterPanel.classList.toggle('open');
+        toggleFiltersBtn.classList.toggle('active');
+    });
+}
+
+// Update active filter count badge
+function updateActiveFilterCount() {
+    let count = 0;
+    if (currentLocation !== 'all') count++;
+    if (currentStipend !== 'all') count++;
+    if (currentDuration !== 'all') count++;
+    if (currentFilter !== 'all') count++;
+    
+    if (activeFilterCount) {
+        if (count > 0) {
+            activeFilterCount.textContent = count;
+            activeFilterCount.classList.add('visible');
+        } else {
+            activeFilterCount.classList.remove('visible');
+        }
+    }
+}
+
+// ===== Dropdown Filters =====
+
+// Location filter
+if (locationFilter) {
+    locationFilter.addEventListener('change', (e) => {
+        currentLocation = e.target.value;
+        updateActiveFilterCount();
+        renderCards();
+    });
+}
+
+// Stipend filter (Paid/Unpaid)
+if (stipendFilter) {
+    stipendFilter.addEventListener('change', (e) => {
+        currentStipend = e.target.value;
+        updateActiveFilterCount();
+        renderCards();
+    });
+}
+
+// Duration filter
+if (durationFilter) {
+    durationFilter.addEventListener('change', (e) => {
+        currentDuration = e.target.value;
+        updateActiveFilterCount();
+        renderCards();
+    });
+}
+
+// Reset all filters
+if (resetFiltersBtn) {
+    resetFiltersBtn.addEventListener('click', () => {
+        // Reset all filter values
+        currentSearch = '';
+        currentFilter = 'all';
+        currentCategory = 'all';
+        currentLocation = 'all';
+        currentStipend = 'all';
+        currentDuration = 'all';
+        
+        // Reset UI elements
+        if (liveSearchInput) liveSearchInput.value = '';
+        if (searchInput) searchInput.value = '';
+        if (locationFilter) locationFilter.value = 'all';
+        if (stipendFilter) stipendFilter.value = 'all';
+        if (durationFilter) durationFilter.value = 'all';
+        if (categoryFilter) categoryFilter.value = 'all';
+        
+        // Reset category tags
+        filterTags.forEach(tag => {
+            tag.classList.remove('active');
+            if (tag.dataset.filter === 'all') {
+                tag.classList.add('active');
+            }
+        });
+        
+        toggleClearButton();
+        updateActiveFilterCount();
+        renderCards();
+        
+        // Visual feedback
+        resetFiltersBtn.textContent = '✓ Reset';
+        setTimeout(() => {
+            resetFiltersBtn.textContent = 'Reset';
+        }, 1000);
+    });
+}
 
 // Mobile menu
 mobileMenuBtn.addEventListener('click', () => {
@@ -399,10 +672,20 @@ function openModal(id) {
     const item = allItems.find(i => i.id === id);
     
     if (item) {
+        const roleTitle = item.role || item.title;
+        const skills = item.skills || item.tags || [];
+        const locationTypeText = item.locationType ? 
+            item.locationType.charAt(0).toUpperCase() + item.locationType.slice(1) : 'Onsite';
+        const locationTypeClass = {
+            'remote': 'location-remote',
+            'onsite': 'location-onsite',
+            'hybrid': 'location-hybrid'
+        }[item.locationType] || 'location-onsite';
+        
         modalBody.innerHTML = `
             <div class="modal-header">
                 <div class="card-logo" style="width: 64px; height: 64px; font-size: 2rem; margin-bottom: 16px;">${item.logo}</div>
-                <h2 style="margin-bottom: 8px;">${item.title}</h2>
+                <h2 style="margin-bottom: 8px;">${roleTitle}</h2>
                 <p style="color: var(--primary); font-weight: 600;">${item.company}</p>
             </div>
             <div class="modal-body" style="margin-top: 24px;">
@@ -410,12 +693,22 @@ function openModal(id) {
                 <div style="margin-bottom: 20px;">
                     <strong>Skills Required:</strong>
                     <div class="card-tags" style="margin-top: 8px;">
-                        ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        ${skills.map(skill => `<span class="tag">${skill}</span>`).join('')}
                     </div>
                 </div>
-                <div style="display: flex; gap: 20px; margin-bottom: 24px;">
-                    <span class="card-location">📍 ${item.location}</span>
-                    <span class="card-duration">⏱️ ${item.duration}</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; padding: 16px; background: var(--gray-100); border-radius: 8px;">
+                    <div>
+                        <span style="font-size: 0.8rem; color: var(--gray-500);">Location</span>
+                        <p style="font-weight: 500; display: flex; align-items: center; gap: 8px;">📍 ${item.location} <span class="location-badge ${locationTypeClass}">${locationTypeText}</span></p>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.8rem; color: var(--gray-500);">Duration</span>
+                        <p style="font-weight: 500;">⏱️ ${item.duration}</p>
+                    </div>
+                    <div style="grid-column: span 2;">
+                        <span style="font-size: 0.8rem; color: var(--gray-500);">Stipend</span>
+                        <p style="font-weight: 600; color: var(--accent); font-size: 1.1rem;">💰 ${item.stipend || 'Unpaid'}</p>
+                    </div>
                 </div>
                 <form id="applyForm" style="margin-top: 20px;">
                     <div class="form-group">
@@ -523,8 +816,55 @@ document.querySelectorAll('.section').forEach(section => {
     observer.observe(section);
 });
 
+// ===== Dark Mode Toggle =====
+const themeToggle = document.getElementById('themeToggle');
+const THEME_KEY = 'opportunityhub-theme';
+
+// Get saved theme or default to light
+function getSavedTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) return saved;
+    
+    // Check system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+    }
+    return 'light';
+}
+
+// Apply theme to document
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+}
+
+// Toggle between light and dark
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(newTheme);
+}
+
+// Theme toggle button click
+if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+}
+
+// Listen for system theme changes
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        // Only auto-switch if user hasn't set a preference
+        if (!localStorage.getItem(THEME_KEY)) {
+            applyTheme(e.matches ? 'dark' : 'light');
+        }
+    });
+}
+
 // ===== Initialize =====
 document.addEventListener('DOMContentLoaded', () => {
+    // Apply saved theme immediately
+    applyTheme(getSavedTheme());
+    
     renderCards();
     
     // Trigger initial section animations
@@ -535,3 +875,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, 100);
 });
+
+// Apply theme before DOM loads to prevent flash
+(function() {
+    const saved = localStorage.getItem('opportunityhub-theme');
+    if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+})();
